@@ -1,0 +1,47 @@
+.Dashboard {
+  height: 100vh;
+}
+
+.Dashboard .windows {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.Dashboard .carbon-emission {
+  background-color: white;
+  width: 90%;
+  height: 25%;
+  border-radius: 20px;
+  margin-bottom: 15px;
+}
+
+.Dashboard .challenge-friend {
+  display: flex;
+  justify-content: space-between;
+  height: 25%;
+  width: 90%;
+  margin-bottom: 15px;
+}
+
+.Dashboard .challenges {
+  background-color: white;
+  width: 48%;
+  height: 100%;
+  border-radius: 20px;
+}
+
+.Dashboard .friends {
+  background-color: white;
+  width: 48%;
+  height: 100%;
+  border-radius: 20px;
+}
+
+.Dashboard .badges {
+  background-color: white;
+  width: 90%;
+  height: 25%;
+  border-radius: 20px;
+}

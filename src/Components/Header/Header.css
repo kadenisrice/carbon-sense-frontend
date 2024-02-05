@@ -1,0 +1,12 @@
+.Header {
+  margin: 10px;
+}
+
+.Header img {
+  width: 30px;
+  height: 30px;
+}
+
+.Header .logo-container {
+  display: flex;
+}

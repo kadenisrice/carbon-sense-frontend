@@ -1,0 +1,20 @@
+/* RESETS HERE */
+
+body,
+h1,
+h2,
+h3,
+h4,
+li,
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+/* STYLE THAT IS A CONSTANT */
+
+body {
+  background: linear-gradient(#99e2b4, #56ab91, #036666);
+  background-repeat: no-repeat;
+  height: 100vh;
+}

@@ -1,0 +1,23 @@
+.CarbonEmission {
+  height: 200vh;
+  background: linear-gradient(#99e2b4, #56ab91, #036666);
+}
+
+.CarbonEmission .carbon-emission-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.CarbonEmission .header-carbon-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 130px;
+}
+
+.CarbonEmission .bar-graph {
+  height: 50px;
+  width: 300px;
+  background-color: #f5f3f3;
+}

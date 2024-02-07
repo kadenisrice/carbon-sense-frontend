@@ -29,6 +29,10 @@ function AuthContextProvider({ children }: { children: ReactNode }) {
             displayName: user.displayName ?? "",
             photoURL: user.photoURL ?? "",
             email: user.email ?? "",
+
+            totalCarbonEmission: 0,
+            totalCarbonUnit: "",
+            activities: [],
           };
           createNewAccount(newAccount).then((r) => setAccount(r));
         }

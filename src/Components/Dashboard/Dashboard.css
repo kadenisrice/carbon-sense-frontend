@@ -11,8 +11,8 @@
 
 .Dashboard .carbon-emission {
   background-color: white;
-  width: 90%;
-  height: 25%;
+  width: 90vw;
+  height: 25vh;
   border-radius: 20px;
   margin-bottom: 15px;
 }
@@ -27,21 +27,21 @@
 
 .Dashboard .challenges {
   background-color: white;
-  width: 48%;
+  width: 43vw;
   height: 100%;
   border-radius: 20px;
 }
 
 .Dashboard .friends {
   background-color: white;
-  width: 48%;
+  width: 43vw;
   height: 100%;
   border-radius: 20px;
 }
 
 .Dashboard .badges {
   background-color: white;
-  width: 90%;
-  height: 25%;
+  width: 90vw;
+  height: 25vh;
   border-radius: 20px;
 }

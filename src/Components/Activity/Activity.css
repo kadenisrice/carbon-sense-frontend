@@ -1,0 +1,13 @@
+/* since main div is skewed, you need to skew all it's children -10deg for it to look normal!*/
+
+.Activity {
+  background-color: white;
+  width: 93vw;
+  height: 200vh;
+  border-radius: 40px;
+  transform: skewY(10deg);
+}
+
+.Activity .activity-list-short {
+  transform: skewY(-10deg);
+}

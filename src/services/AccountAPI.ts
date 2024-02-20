@@ -17,3 +17,17 @@ export const getAccountById = async (uid: string): Promise<Account | void> => {
 export const createNewAccount = async (account: Account): Promise<Account> => {
   return (await axios.post(`${baseUrl}/accounts`, account)).data;
 };
+
+// Update Account by ID (to add activities n stuff)
+export const updateAccountById = async (
+  uid: string,
+  account: Account
+): Promise<Account | void> => {
+  try {
+    return (
+      await axios.put(`${baseUrl}/accounts/${encodeURIComponent(uid)}`, account)
+    ).data;
+  } catch (err) {
+    console.log(err);
+  }
+};

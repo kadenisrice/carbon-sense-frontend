@@ -18,14 +18,27 @@ interface Activity {
   uuid: string;
   name: string;
 
-  // electricity, flight, shipping, vehicle, fuel combustion, etc etc..
+  // type of carbon is emmission type (electricity, vehicle, etc.)
   typeOfCarbon: string;
-  typeUnit: string;
-  typeAmt: string;
   carbon_g: number;
   carbon_lb: number;
   carbon_kg: number;
   carbon_mt: number;
+
+  // for electricity
+  electricityUnit?: string;
+  electricityValue?: number;
+
+  // for Flight
+  passengers?: number;
+  legs?: [];
+  distanceUnit?: string;
+
+  // for Shipping
+  weightUnit: string;
+  weightValue: number;
+  distanceValue: number;
+  transportMethod: string;
 
   // for more information
   country?: string;

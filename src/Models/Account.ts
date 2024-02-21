@@ -14,16 +14,16 @@ export default interface Account {
   activities?: Activity[];
 }
 
-interface Activity {
-  uuid: string;
-  name: string;
+export interface Activity {
+  uuid?: string;
+  name?: string;
 
   // type of carbon is emmission type (electricity, vehicle, etc.)
-  typeOfCarbon: string;
-  carbon_g: number;
-  carbon_lb: number;
-  carbon_kg: number;
-  carbon_mt: number;
+  typeOfCarbon?: string;
+  carbon_g?: number;
+  carbon_lb?: number;
+  carbon_kg?: number;
+  carbon_mt?: number;
 
   // for electricity
   electricityUnit?: string;
@@ -35,10 +35,10 @@ interface Activity {
   distanceUnit?: string;
 
   // for Shipping
-  weightUnit: string;
-  weightValue: number;
-  distanceValue: number;
-  transportMethod: string;
+  weightUnit?: string;
+  weightValue?: number;
+  distanceValue?: number;
+  transportMethod?: string;
 
   // for more information
   country?: string;

@@ -1,6 +1,8 @@
 import axios from "axios";
 import EmissionObject from "../Models/EmissionObject";
 import ElectricityEmissionData from "../Models/ElectricityEmissionData";
+import FlightEmissionData from "../Models/FlightEmissionData";
+import ShippingEmissionData from "../Models/ShippingEmissionData";
 
 const carbonInterfaceApiKey: string =
   import.meta.env.VITE_CARBON_API_KEY ?? "API key is not present!";
@@ -16,7 +18,37 @@ export const getElectricityCarbonEmission = async (
       await axios.post(`${baseUrl}`, data, {
         headers: { Authorization: carbonInterfaceApiKey },
       })
-    ).data;
+    ).data.data.attributes;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+// Get Carbon Emissions (flight):
+export const getFlightCarbonEmission = async (
+  data: FlightEmissionData
+): Promise<EmissionObject | void> => {
+  try {
+    return (
+      await axios.post(`${baseUrl}`, data, {
+        headers: { Authorization: carbonInterfaceApiKey },
+      })
+    ).data.data.attributes;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+// Get Carbon Emissions (shipping):
+export const getShippingCarbonEmission = async (
+  data: ShippingEmissionData
+): Promise<EmissionObject | void> => {
+  try {
+    return (
+      await axios.post(`${baseUrl}`, data, {
+        headers: { Authorization: carbonInterfaceApiKey },
+      })
+    ).data.data.attributes;
   } catch (err) {
     console.log(err);
   }

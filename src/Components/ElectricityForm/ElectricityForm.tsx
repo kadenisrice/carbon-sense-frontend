@@ -27,23 +27,18 @@ const ElectricityForm = ({
   return (
     <div className="ElectricityForm">
       <div className="unit-of-electricity">
-        <p>Choose the unit of electricity:</p>
-        <label htmlFor="mwh">Megawatt Hours</label>
-        <input
-          type="radio"
-          id="mwh"
-          name="megawatt hours"
-          onChange={(e) => setElectricityUnit(e.target.value)}
+        <label htmlFor="electricity-unit">Choose unit of electricity</label>
+        <select
+          name="electricity-uniit"
+          id="electricity-unit"
           value={electricityUnit}
-        />
-        <label htmlFor="kwh">Kilowatt Hours</label>
-        <input
-          type="radio"
-          id="kwh"
-          name="kilowatt hours"
-          onChange={(e) => setElectricityUnit(e.target.value)}
-          value={electricityUnit}
-        />
+          onChange={(e) => {
+            setElectricityUnit(e.target.value);
+          }}
+        >
+          <option value="mwh">megawatt hours</option>
+          <option value="kwh">kilowatt hours</option>
+        </select>
       </div>
 
       <div className="value-of-electricity">

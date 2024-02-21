@@ -6,13 +6,15 @@ import ShippingForm from "../ShippingForm/ShippingForm";
 import VehicleForm from "../VehicleForm/VehicleForm";
 import FuelCombustionForm from "../FuelCombustionForm/FuelCombustionForm";
 import AuthContext from "../../context/AuthContext";
-import Account from "../../Models/Account";
+import Account, { Activity } from "../../Models/Account";
 import { v4 as uuidv4 } from "uuid";
 import {
-  getCarbonEmission,
   getElectricityCarbonEmission,
+  getFlightCarbonEmission,
+  getShippingCarbonEmission,
 } from "../../services/CarbonInterfaceAPI";
 import EmissionObject from "../../Models/EmissionObject";
+import { updateAccountById } from "../../services/AccountAPI";
 
 const MainActivityForm = () => {
   const { user, account, setAccount } = useContext(AuthContext);
@@ -22,37 +24,81 @@ const MainActivityForm = () => {
   // Activity form as a whole:
   const [activityName, setActivityName] = useState("");
 
-  // for electricity form:
+  // ------------------------------------------------------------------------------------------------------------------------------
+
+  // for electricity form: -------------------------------------------------------------
   const [electricityUnit, setElectricityUnit] = useState("mwh");
   const [electricityValue, setElectricityValue] = useState(0);
   const [electricityCountry, setElectricityCountry] = useState("");
   const [electricityState, setElectricityState] = useState("");
+
+  // for flight form: -------------------------------------------------------------
+  const [passengers, setPassengers] = useState(0);
+  const [legs, setLegs] = useState([]);
+
+  //distance unit is also used for the shipping/vehicle form as well
+  const [distanceUnit, setDistanceUnit] = useState("km");
+
+  // for leg object/array
+  const [departureAirport, setDepartureAirport] = useState("");
+  const [destinationAirport, setDestinationAirport] = useState("");
+  const [cabinClass, setCabinClass] = useState("economy");
+
+  // for shipping form: -------------------------------------------------------------
+  const [weightUnit, setWeightUnit] = useState("kg");
+  const [weightValue, setWeightValue] = useState(0);
+
+  // distance value is also used for vehicle form
+  const [distanceValue, setDistanceValue] = useState(0);
+  const [transportMethod, setTransportMethod] = useState("");
+
+  // for vehicle form: -------------------------------------------------------------
+  const [vehicleModelId, setVehicleModelId] = useState("");
+
+  // ------------------------------------------------------------------------------------------------------------------------------
 
   // Once the response is returned from Carbon Interface API, this state variable will store that information:
   const [newEmissionInfo, setNewEmissionInfo] = useState<EmissionObject | null>(
     null
   );
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
+  // functions below now ------------------------------------------------------------------------------------------------------------
 
+  const addToDatabase = () => {
     if (user && account) {
-      const updatedAccount: Account = {
-        ...account,
-        activities: [
+      let myActivities: Activity[] = [];
+
+      if (account.activities) {
+        myActivities = [
           ...account.activities,
           {
             uuid: uuidv4(),
-            name: activityName,
 
+            // this is the main form info
+            name: activityName,
             typeOfCarbon: emissionType,
+
+            // new emission info is the response from the Carbon API (flight, electricity, fuel combustion, etc.)
+            ...newEmissionInfo,
           },
-        ],
-      };
+        ];
+      }
+
+      const updatedAccount: Account = account;
+      updatedAccount.activities = myActivities;
+
+      updateAccountById(account._id!, updatedAccount);
+
+      // const updatedAccount: Account = {
+      //   ...account,
+      //   activities: [...account.activities],
+      // };
     }
   };
 
-  useEffect(() => {
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+
     if (account && emissionType === "electricity") {
       getElectricityCarbonEmission({
         // these values are coming from the *electricity* part of the form below
@@ -66,11 +112,46 @@ const MainActivityForm = () => {
           setNewEmissionInfo(res);
         }
       });
+    } else if (account && emissionType === "flight") {
+    } else if (account && emissionType === "shipping") {
+      getShippingCarbonEmission({
+        type: emissionType,
+        weight_unit: weightUnit,
+        weight_value: weightValue,
+        distance_unit: distanceUnit,
+        distance_value: distanceValue,
+        transport_method: transportMethod,
+      }).then((res) => {
+        if (res) {
+          setNewEmissionInfo(res);
+        }
+      });
+    } else if (account && emissionType === "vehicle") {
+    } else if (account && emissionType === "fuel-combustion") {
     } else {
       setNewEmissionInfo(null);
     }
-  }, [account]);
+
+    // resetting fields:
+
+    // electricity:
+    setEmissionType("");
+    setElectricityUnit("");
+    setElectricityValue(0);
+    setElectricityCountry("");
+    setElectricityState("");
+  };
+
+  // console.log(electricityUnit);
+  // console.log(weightUnit);
+  // console.log(weightValue);
+  // console.log(distanceUnit);
+  // console.log(distanceValue);
+  // console.log(transportMethod);
+
+  useEffect(() => {}, [account]);
   console.log(newEmissionInfo);
+  // below is JSX --------------------------------------------------------------------------------------------------
 
   return (
     <form className="MainActivityForm" onSubmit={handleSubmit}>
@@ -127,11 +208,27 @@ const MainActivityForm = () => {
 
       {emissionType === "flight" && <FlightForm />}
 
-      {emissionType === "shipping" && <ShippingForm />}
+      {emissionType === "shipping" && (
+        <ShippingForm
+          weightUnit={weightUnit}
+          setWeightUnit={setWeightUnit}
+          weightValue={weightValue}
+          setWeightValue={setWeightValue}
+          distanceUnit={distanceUnit}
+          setDistanceUnit={setDistanceUnit}
+          distanceValue={distanceValue}
+          setDistanceValue={setDistanceValue}
+          transportMethod={transportMethod}
+          setTransportMethod={setTransportMethod}
+        />
+      )}
 
       {emissionType === "vehicle" && <VehicleForm />}
 
       {emissionType === "fuel-combustion" && <FuelCombustionForm />}
+
+      <button type="submit">load carbon API call</button>
+      <button onClick={addToDatabase}>add activity to database</button>
     </form>
   );
 };

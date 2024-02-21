@@ -20,12 +20,12 @@ export const createNewAccount = async (account: Account): Promise<Account> => {
 
 // Update Account by ID (to add activities n stuff)
 export const updateAccountById = async (
-  uid: string,
+  _id: string,
   account: Account
 ): Promise<Account | void> => {
   try {
     return (
-      await axios.put(`${baseUrl}/accounts/${encodeURIComponent(uid)}`, account)
+      await axios.put(`${baseUrl}/accounts/${encodeURIComponent(_id)}`, account)
     ).data;
   } catch (err) {
     console.log(err);

@@ -11,6 +11,7 @@ import { v4 as uuidv4 } from "uuid";
 import {
   getElectricityCarbonEmission,
   getFlightCarbonEmission,
+  getFuelCombustionCarbonEmission,
   getShippingCarbonEmission,
 } from "../../services/CarbonInterfaceAPI";
 import EmissionObject from "../../Models/EmissionObject";
@@ -55,6 +56,11 @@ const MainActivityForm = () => {
   // for vehicle form: -------------------------------------------------------------
   const [vehicleModelId, setVehicleModelId] = useState("");
 
+  // for fuel combustion form: -------------------------------------------------------------
+  const [fuelSourceType, setFuelSourceType] = useState("");
+  const [fuelSourceUnit, setFuelSourceUnit] = useState("");
+  const [fuelSourceValue, setFuelSourceValue] = useState(0);
+
   // ------------------------------------------------------------------------------------------------------------------------------
 
   // Once the response is returned from Carbon Interface API, this state variable will store that information:
@@ -94,6 +100,15 @@ const MainActivityForm = () => {
       //   activities: [...account.activities],
       // };
     }
+
+    // resetting fields:
+
+    // electricity:
+    setEmissionType("");
+    setElectricityUnit("");
+    setElectricityValue(0);
+    setElectricityCountry("");
+    setElectricityState("");
   };
 
   const handleSubmit = (e: FormEvent) => {
@@ -127,7 +142,17 @@ const MainActivityForm = () => {
         }
       });
     } else if (account && emissionType === "vehicle") {
-    } else if (account && emissionType === "fuel-combustion") {
+    } else if (account && emissionType === "fuel_combustion") {
+      getFuelCombustionCarbonEmission({
+        type: emissionType,
+        fuel_source_type: fuelSourceType,
+        fuel_source_unit: fuelSourceUnit,
+        fuel_source_value: fuelSourceValue,
+      }).then((res) => {
+        if (res) {
+          setNewEmissionInfo(res);
+        }
+      });
     } else {
       setNewEmissionInfo(null);
     }
@@ -135,11 +160,11 @@ const MainActivityForm = () => {
     // resetting fields:
 
     // electricity:
-    setEmissionType("");
-    setElectricityUnit("");
-    setElectricityValue(0);
-    setElectricityCountry("");
-    setElectricityState("");
+    // setEmissionType("");
+    // setElectricityUnit("");
+    // setElectricityValue(0);
+    // setElectricityCountry("");
+    // setElectricityState("");
   };
 
   // console.log(electricityUnit);
@@ -188,7 +213,7 @@ const MainActivityForm = () => {
           <option value="flight">Flight</option>
           <option value="shipping">Shipping</option>
           <option value="vehicle">Vehicle</option>
-          <option value="fuel-combustion">Fuel Combustion</option>
+          <option value="fuel_combustion">Fuel Combustion</option>
         </select>
       </div>
       {/* here we are setting the type of form based on which emission type the user chooses */}
@@ -206,7 +231,22 @@ const MainActivityForm = () => {
         />
       )}
 
-      {emissionType === "flight" && <FlightForm />}
+      {emissionType === "flight" && (
+        <FlightForm
+          passengers={passengers}
+          setPassengers={setPassengers}
+          legs={legs}
+          setLegs={setLegs}
+          distanceUnit={distanceUnit}
+          setDistanceUnit={setDistanceUnit}
+          departureAirport={departureAirport}
+          setDepartureAirport={setDepartureAirport}
+          destinationAirport={destinationAirport}
+          setDestinationAirport={setDestinationAirport}
+          cabinClass={cabinClass}
+          setCabinClass={setCabinClass}
+        />
+      )}
 
       {emissionType === "shipping" && (
         <ShippingForm
@@ -225,7 +265,16 @@ const MainActivityForm = () => {
 
       {emissionType === "vehicle" && <VehicleForm />}
 
-      {emissionType === "fuel-combustion" && <FuelCombustionForm />}
+      {emissionType === "fuel_combustion" && (
+        <FuelCombustionForm
+          fuelSourceType={fuelSourceType}
+          setFuelSourceType={setFuelSourceType}
+          fuelSourceUnit={fuelSourceUnit}
+          setFuelSourceUnit={setFuelSourceUnit}
+          fuelSourceValue={fuelSourceValue}
+          setFuelSourceValue={setFuelSourceValue}
+        />
+      )}
 
       <button type="submit">load carbon API call</button>
       <button onClick={addToDatabase}>add activity to database</button>

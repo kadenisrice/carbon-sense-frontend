@@ -4,7 +4,7 @@ export default interface FlightEmissionData {
   legs: Leg[];
 }
 
-interface Leg {
+export interface Leg {
   departure_airport: string;
   destination_airport: string;
   cabin_class?: string;

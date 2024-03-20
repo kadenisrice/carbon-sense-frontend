@@ -1,3 +1,5 @@
+import { Leg } from "./FlightEmissionData";
+
 export default interface EmissionObject {
   id: string;
   attributes: Attribute;
@@ -18,6 +20,10 @@ interface Attribute {
   state?: string;
 
   // for flight:
+  passengers?: number;
+  legs?: Leg[];
+  departure_airport?: string;
+  cabin_class?: string;
 
   // for shipping:
   distance_value?: string;

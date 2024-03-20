@@ -100,15 +100,6 @@ const MainActivityForm = () => {
       //   activities: [...account.activities],
       // };
     }
-
-    // resetting fields:
-
-    // electricity:
-    setEmissionType("");
-    setElectricityUnit("");
-    setElectricityValue(0);
-    setElectricityCountry("");
-    setElectricityState("");
   };
 
   const handleSubmit = (e: FormEvent) => {
@@ -128,6 +119,22 @@ const MainActivityForm = () => {
         }
       });
     } else if (account && emissionType === "flight") {
+      getFlightCarbonEmission({
+        type: emissionType,
+        passengers: passengers,
+        distance_unit: distanceUnit,
+        legs: [
+          {
+            departure_airport: departureAirport,
+            destination_airport: destinationAirport,
+            cabin_class: cabinClass,
+          },
+        ],
+      }).then((res) => {
+        if (res) {
+          setNewEmissionInfo(res);
+        }
+      });
     } else if (account && emissionType === "shipping") {
       getShippingCarbonEmission({
         type: emissionType,
@@ -160,11 +167,24 @@ const MainActivityForm = () => {
     // resetting fields:
 
     // electricity:
-    // setEmissionType("");
-    // setElectricityUnit("");
-    // setElectricityValue(0);
-    // setElectricityCountry("");
-    // setElectricityState("");
+    setEmissionType("");
+    setElectricityUnit("");
+    setElectricityValue(0);
+    setElectricityCountry("");
+    setElectricityState("");
+
+    // flight:
+    setPassengers(0);
+    setDepartureAirport("");
+    setDestinationAirport("");
+    setCabinClass("economy");
+    setDistanceUnit("km");
+
+    // shipping:
+    setWeightUnit("kg");
+    setWeightValue(0);
+    setDistanceValue(0);
+    setTransportMethod("ship");
   };
 
   // console.log(electricityUnit);
@@ -263,7 +283,16 @@ const MainActivityForm = () => {
         />
       )}
 
-      {emissionType === "vehicle" && <VehicleForm />}
+      {emissionType === "vehicle" && (
+        <VehicleForm
+          distanceUnit={distanceUnit}
+          setDistanceUnit={setDistanceUnit}
+          distanceValue={distanceValue}
+          setDistanceValue={setDistanceValue}
+          vehicleModelId={vehicleModelId}
+          setVehicleModelId={setVehicleModelId}
+        />
+      )}
 
       {emissionType === "fuel_combustion" && (
         <FuelCombustionForm

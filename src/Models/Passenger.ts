@@ -3,4 +3,5 @@
 
 export default interface Passenger {
   name: string;
+  uuid: string;
 }

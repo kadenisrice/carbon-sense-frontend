@@ -3,6 +3,7 @@ import { Leg } from "../../Models/FlightEmissionData";
 import Passenger from "../../Models/Passenger";
 import LegForm from "../LegForm/LegForm";
 import "./FlightForm.css";
+import { v4 as uuidv4 } from "uuid";
 
 interface Props {
   passengers: number;
@@ -40,30 +41,18 @@ const FlightForm = ({
 }: Props) => {
   // state variables:
 
-  const [passengersArrayState, setPassengersArrayState] = useState<
-    Passenger[] | null
-  >([]);
-
   // --------------------------------------------------
 
   const getNumberOfPassengersArray = () => {
+    let array = [];
     for (let index = 0; index < passengers; index++) {
-      if (passengersArrayState) {
-        if (index + 1 === passengers) {
-          passengersArrayState.push({
-            name: `Passenger ${index + 1}`,
-          });
-        }
-      }
+      array.push({
+        name: `passenger ${index + 1}`,
+        uuid: uuidv4(),
+      });
     }
+    return array;
   };
-
-  useEffect(() => {
-    getNumberOfPassengersArray();
-  }, [passengers]);
-
-  console.log(passengers);
-  console.log(passengersArrayState);
 
   return (
     <div className="FlightForm">
@@ -72,18 +61,48 @@ const FlightForm = ({
           How many passengers did you fly with?
         </label>
         <input
+          required
           type="number"
           id="passengers"
           name="passengers"
           value={passengers}
+          min={0}
           onChange={(e) => {
             setPassengers(+e.target.value);
           }}
         />
       </div>
 
-      {passengersArrayState!.map((passenger) => {
-        return <LegForm passenger={passenger} key={passenger.name} />;
+      <div className="distance-unit">
+        <label htmlFor="distance-unit">
+          What unit do you use for distance?
+        </label>
+        <select
+          name="distance-unit"
+          id="distance-unit"
+          value={distanceUnit}
+          onChange={(e) => {
+            setDistanceUnit(e.target.value);
+          }}
+        >
+          <option value="mi">Miles</option>
+          <option value="km">Kilometers</option>
+        </select>
+      </div>
+
+      {getNumberOfPassengersArray().map((passenger) => {
+        return (
+          <LegForm
+            passenger={passenger}
+            key={passenger.uuid}
+            departureAirport={departureAirport}
+            setDepartureAirport={setDepartureAirport}
+            destinationAirport={destinationAirport}
+            setDestinationAirport={setDestinationAirport}
+            cabinClass={cabinClass}
+            setCabinClass={setCabinClass}
+          />
+        );
       })}
     </div>
   );

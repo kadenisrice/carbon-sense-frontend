@@ -1,0 +1,36 @@
+/* since main div is skewed, you need to skew all it's children -10deg for it to look normal!*/
+
+.Activity {
+  background-color: white;
+  width: 93vw;
+  height: 200vh;
+  border-radius: 40px;
+  transform: skewY(10deg);
+}
+
+.Activity .activity-list-short {
+  transform: skewY(-10deg);
+  margin-top: 50px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.Activity h3 {
+  margin-bottom: 10px;
+}
+
+.Activity ul {
+  display: flex;
+  flex-direction: column;
+}
+
+.Activity li {
+  list-style: none;
+  margin-bottom: 10px;
+
+  background-color: #e6e6e6;
+  padding: 5px 40px;
+  border-radius: 15px;
+}

@@ -1,4 +1,4 @@
-import Activity from "../Activity/Activity";
+import Activity from "../YourActivity/Activity";
 import Header from "../Header/Header";
 import "./CarbonEmission.css";
 

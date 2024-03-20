@@ -1,6 +1,7 @@
 export default interface FlightEmissionData {
   type: string;
   passengers: number;
+  distance_unit?: string;
   legs: Leg[];
 }
 

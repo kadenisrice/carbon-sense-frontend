@@ -13,14 +13,18 @@ import {
   getFlightCarbonEmission,
   getFuelCombustionCarbonEmission,
   getShippingCarbonEmission,
+  getVehicleCarbonEmission,
+  getVehicleMakes,
 } from "../../services/CarbonInterfaceAPI";
 import EmissionObject from "../../Models/EmissionObject";
 import { updateAccountById } from "../../services/AccountAPI";
+import VehicleMake from "../../Models/VehicleMake";
 
 const MainActivityForm = () => {
   const { user, account, setAccount } = useContext(AuthContext);
   // this state here is to conditionally render each form based on the type of activity
   const [emissionType, setEmissionType] = useState("");
+  const [selectedTab, setSelectedTab] = useState(0);
 
   // Activity form as a whole:
   const [activityName, setActivityName] = useState("");
@@ -54,6 +58,7 @@ const MainActivityForm = () => {
   const [transportMethod, setTransportMethod] = useState("");
 
   // for vehicle form: -------------------------------------------------------------
+
   const [vehicleModelId, setVehicleModelId] = useState("");
 
   // for fuel combustion form: -------------------------------------------------------------
@@ -149,6 +154,16 @@ const MainActivityForm = () => {
         }
       });
     } else if (account && emissionType === "vehicle") {
+      getVehicleCarbonEmission({
+        type: emissionType,
+        distance_unit: distanceUnit,
+        distance_value: distanceValue,
+        vehicle_model_id: vehicleModelId,
+      }).then((res) => {
+        if (res) {
+          setNewEmissionInfo(res);
+        }
+      });
     } else if (account && emissionType === "fuel_combustion") {
       getFuelCombustionCarbonEmission({
         type: emissionType,
@@ -202,7 +217,7 @@ const MainActivityForm = () => {
     <form className="MainActivityForm" onSubmit={handleSubmit}>
       <h3>Add a New Activity</h3>
 
-      <div className="name-of-actiivity">
+      <div className="name-of-activity">
         <label htmlFor="activity-name">Name this activity:</label>
         <input
           type="text"
@@ -217,25 +232,84 @@ const MainActivityForm = () => {
       </div>
 
       <div className="type-of-activity">
-        <label htmlFor="type">
-          What kind of activity are you taking part in?
-        </label>
-        <select
-          onChange={(e) => {
-            setEmissionType(e.target.value);
+        <div
+          className={`electricity type-icon ${
+            selectedTab === 0
+              ? `selected ${useEffect(() => {
+                  setEmissionType("electricity");
+                }, [selectedTab])}`
+              : ""
+          }`}
+          onClick={() => {
+            setSelectedTab(0);
           }}
-          name="type"
-          id="type"
-          value={emissionType}
-          required
         >
-          <option value="electricity">Electricity</option>
-          <option value="flight">Flight</option>
-          <option value="shipping">Shipping</option>
-          <option value="vehicle">Vehicle</option>
-          <option value="fuel_combustion">Fuel Combustion</option>
-        </select>
+          <i className="fa-solid fa-bolt"></i>
+        </div>
+        <div
+          className={`flight type-icon ${
+            selectedTab === 1
+              ? `selected ${useEffect(() => {
+                  setEmissionType("flight");
+                }, [selectedTab])}`
+              : ""
+          }`}
+          onClick={() => {
+            setSelectedTab(1);
+          }}
+        >
+          <i className="fa-solid fa-plane"></i>
+        </div>
+        <div
+          className={`shipping type-icon ${
+            selectedTab === 2
+              ? `selected ${useEffect(() => {
+                  setEmissionType("shipping");
+                }, [selectedTab])}`
+              : ""
+          }`}
+          onClick={() => {
+            setSelectedTab(2);
+          }}
+        >
+          <i className="fa-solid fa-truck-fast"></i>
+        </div>
+        <div
+          className={`vehicle type-icon ${
+            selectedTab === 3
+              ? `selected ${useEffect(() => {
+                  setEmissionType("vehicle");
+                }, [selectedTab])}`
+              : ""
+          }`}
+          onClick={() => {
+            setSelectedTab(3);
+          }}
+        >
+          <i className="fa-solid fa-car"></i>
+        </div>
+        <div
+          className={`fuel_combustion type-icon ${
+            selectedTab === 4
+              ? `selected ${useEffect(() => {
+                  setEmissionType("fuel_combustion");
+                }, [selectedTab])}`
+              : ""
+          }`}
+          onClick={() => {
+            setSelectedTab(4);
+          }}
+        >
+          <i className="fa-solid fa-gas-pump"></i>
+        </div>
       </div>
+
+      <h3>{emissionType === "electricity" ? "Electricity" : ""}</h3>
+      <h3>{emissionType === "flight" ? "Flight" : ""}</h3>
+      <h3>{emissionType === "shipping" ? "Shipping" : ""}</h3>
+      <h3>{emissionType === "vehicle" ? "Vehicle" : ""}</h3>
+      <h3>{emissionType === "fuel_combustion" ? "Fuel Combustion" : ""}</h3>
+
       {/* here we are setting the type of form based on which emission type the user chooses */}
 
       {emissionType === "electricity" && (
